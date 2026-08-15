@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  app:
+    build: .
+    # buy default the we have Folder named as Dockerfile so we do not require the next two lines
+  #   context: ./
+  # dockerfile: Dockerfile
+    container_name: user-project
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/postgres
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
